@@ -10,7 +10,9 @@ export default {
         { id: id++, text: 'Learn HTML', done: true },
         { id: id++, text: 'Learn JavaScript', done: true },
         { id: id++, text: 'Learn Vue', done: false }
-      ]
+      ],
+      editingTodo: null,
+      editedTodoText: ''
     }
   },
   computed: {
@@ -27,6 +29,18 @@ export default {
     },
     removeTodo(todo) {
       this.todos = this.todos.filter((t) => t !== todo)
+    },
+    editTodo(todo) {
+      this.editingTodo = todo
+      this.editedTodoText = todo.text
+    },
+    cancelEdit() {
+      this.editingTodo = null
+      this.editedTodoText = ''
+    },
+    saveEdit(todo) {
+      todo.text = this.editedTodoText
+      this.cancelEdit()
     }
   }
 }
@@ -45,8 +59,12 @@ export default {
         <li v-for="todo in filteredTodos" :key="todo.id">
           <div class="list">
             <input type="checkbox" v-model="todo.done" />
-            <span :class="{ done: todo.done }">{{ todo.text }}</span>
+            <span :class="{ done: todo.done }" v-if="editingTodo !== todo">{{ todo.text }}</span>
+            <input v-else v-model="editedTodoText" @keyup.enter="saveEdit(todo)" @keyup.esc="cancelEdit()" />
             <button @click="removeTodo(todo)">X</button>
+            <button v-if="editingTodo !== todo" @click="editTodo(todo)">Edit</button>
+            <button v-else @click="saveEdit(todo)">Save</button>
+            <button v-if="editingTodo === todo" @click="cancelEdit()">Cancel</button>
           </div>
         </li>
       </ul>
