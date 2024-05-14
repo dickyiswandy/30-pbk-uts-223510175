@@ -1,10 +1,13 @@
 <script setup>
 import projek from './components/projek.vue'
+
 </script>
 
 <template>
-  
+   
   <projek  />
+
+  
 </template>
 
 <style scoped>
