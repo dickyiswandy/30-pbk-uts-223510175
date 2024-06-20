@@ -4,7 +4,7 @@
     <header>
       <nav>
         <ul>
-          <li @click="showTodos" :class="{ active: activeMenu === 'todos' }">Todos</li>
+          <li @click="showTodos" :class="{ active: activeMenu === 'todos' }">Toddddos</li>
           <li @click="showPosts" :class="{ active: activeMenu === 'posts' }">Posts</li>
         </ul>
       </nav>

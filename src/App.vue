@@ -4,24 +4,21 @@
     <header>
       <nav>
         <ul>
-          <li @click="showTodos" :class="{ active: activeMenu === 'todos' }">Todos</li>
-          <li @click="showPosts" :class="{ active: activeMenu === 'posts' }">Posts</li>
+          <li @click="navigate('Todos')" :class="{ active: isActive('Todos') }">Todos</li>
+          <li @click="navigate('Posts')" :class="{ active: isActive('Posts') }">Posts</li>
+          <li @click="navigate('Albums')" :class="{ active: isActive('Albums') }">Albums</li>
         </ul>
       </nav>
     </header>
 
     <!-- Main Content -->
     <main>
-      <Todos
-        v-if="activeMenu === 'todos'"
+      <router-view
         :todos="todos"
         :hide-completed="hideCompleted"
         @add-todo="addTodo"
         @remove-todo="removeTodo"
         @toggle-hide-completed="toggleHideCompleted"
-      />
-      <Posts
-        v-else-if="activeMenu === 'posts'"
         :users="users"
         :posts="posts"
         @update-selected-user="updateSelectedUser"
@@ -31,25 +28,16 @@
 </template>
 
 <script>
-import Todos from './components/Todos.vue';
-import Posts from './components/Posts.vue';
-
-let id = 0;
-
 export default {
   name: 'App',
-  components: {
-    Todos,
-    Posts,
-  },
   data() {
     return {
       activeMenu: 'todos',
       hideCompleted: false,
       todos: [
-        { id: id++, text: 'Civic Turbo', done: true },
-        { id: id++, text: 'Lamborghini Gallardo', done: true },
-        { id: id++, text: 'Toyota Fortuner', done: false },
+        { id: 0, text: 'Civic Turbo', done: true },
+        { id: 1, text: 'Lamborghini Gallardo', done: true },
+        { id: 2, text: 'Toyota Fortuner', done: false },
       ],
       users: [],
       posts: [],
@@ -58,7 +46,7 @@ export default {
   },
   methods: {
     addTodo(newTodo) {
-      this.todos.push({ id: id++, text: newTodo, done: false });
+      this.todos.push({ id: this.todos.length, text: newTodo, done: false });
     },
     removeTodo(todo) {
       this.todos = this.todos.filter((t) => t !== todo);
@@ -66,25 +54,23 @@ export default {
     toggleHideCompleted() {
       this.hideCompleted = !this.hideCompleted;
     },
-    showTodos() {
-      this.activeMenu = 'todos';
+    navigate(routeName) {
+      this.$router.push({ name: routeName });
     },
-    showPosts() {
-      this.activeMenu = 'posts';
+    isActive(routeName) {
+      return this.$route.name === routeName;
     },
     updateSelectedUser(selectedUser) {
       this.selectedUser = selectedUser;
     },
   },
   mounted() {
-    // Ambil data user dari API
     fetch('https://jsonplaceholder.typicode.com/users')
       .then((response) => response.json())
       .then((data) => {
         this.users = data;
       });
 
-    // Ambil data postingan dari API
     fetch('https://jsonplaceholder.typicode.com/posts')
       .then((response) => response.json())
       .then((data) => {
@@ -121,5 +107,17 @@ nav ul li.active {
 
 nav ul li:hover {
   color: #1E90FF; /* Warna teks saat dihover */
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.todos-container {
+  max-width: 400px;
+  width: 100%;
 }
 </style>

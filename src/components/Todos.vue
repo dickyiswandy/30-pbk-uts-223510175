@@ -46,8 +46,16 @@
   </script>
   
   <style scoped>
-  .done {
-    text-decoration: line-through;
-  }
+  .flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.todos-container {
+  max-width: 400px;
+  width: 100%;
+}
   </style>
   
